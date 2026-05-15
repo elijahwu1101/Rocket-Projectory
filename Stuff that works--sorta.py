@@ -92,7 +92,7 @@ class Rocket:
                 if self.vy > 2.0:
                     active_power = downward_force * 5.0
                 elif self.vy > 0:
-                    active_power = downward_force * 1.3
+                    active_power = downward_force * 0.95 # Gradual descent --> allows user to focus solely on angle, instead of both thrust and angle --> triggered by pressing "L"
                 else:
                     active_power = self.thrust_power
             else:
