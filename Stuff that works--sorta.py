@@ -1,3 +1,6 @@
+import pygame
+import math
+
 import math
 import random
 
@@ -20,8 +23,8 @@ ORANGE = (255, 128, 0)
 YELLOW = (255, 255, 0)
 
 # Background color
-DARK_BLUE = (0, 29, 40)
-LIGHT_BLUE = (135, 206, 250)
+TOP_COLOR = (0, 29, 40)
+BOTTOM_COLOR = (135, 206, 250)
 MINIMAP_BLUE = (135 - 10, 206 - 10, 250 - 10)  # A shade darker
 
 font = pygame.font.SysFont("Monospace", 20)
@@ -85,7 +88,7 @@ class Rocket:
             active_power = downward_force * 3.0  # Kick-Start
 
         if pygame.key.get_pressed()[pygame.K_l]:
-            self.mode = "landing"
+            self.mode = "landing" 
 
         if self.mode == "landing":
             if pygame.mouse.get_pressed()[0]:
@@ -136,6 +139,7 @@ class Rocket:
             self.vy = 0
             self.thrust_power = self.thrust_power
             self.mode = "taking_off"
+
 
     def tilt(self):
         in_air = self.rect.bottom < pad.rect.top
@@ -235,6 +239,26 @@ rocket = Rocket(
 
 particle = []
 
+def draw_vert_gradient(width, height, top_color, bottom_color): #draw background
+    gradient = pygame.Surface((width, height))
+
+    for y in range(height):
+        ratio = y / height
+
+        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+
+        pygame.draw.line(gradient, (r, g, b), (0, y), (width, y))
+    
+    return gradient
+
+background = draw_vert_gradient(
+    screen_width, 
+    screen_height, 
+    TOP_COLOR, 
+    BOTTOM_COLOR
+)
 
 clock = pygame.time.Clock()
 # Game loop
@@ -249,7 +273,8 @@ while True:
 
         keys = pygame.key.get_pressed()
 
-    screen.fill(LIGHT_BLUE)
+    screen.blit(background,(0, 0))
+
 
     # Launchpad
     pad.draw()
